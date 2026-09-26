@@ -1,0 +1,1011 @@
+/* ==========================================================================
+   Design tokens — Airbnb-inspired: Cereal/Circular type, Rausch pink accent,
+   generous rounding, soft shadow-based elevation instead of borders.
+   ========================================================================== */
+
+:root {
+  /* Colors — light */
+  --bg: #f7f7f7;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --border: #dddddd;
+  --text: #222222;
+  --text-muted: #717171;
+  --text-subtle: #b0b0b0;
+  --accent: #ff385c;
+  --accent-pressed: #d70466;
+  --accent-foreground: #ffffff;
+  --accent-tint: #ffe8ec;
+  --success: #00873e;
+  --success-tint: #e4f6e9;
+  --warning: #a15c00;
+  --warning-tint: #fdf1de;
+  --danger: #c13515;
+  --danger-tint: #fbe9e4;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius: 16px;
+  --radius-full: 999px;
+  --border-width: 1px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06), 0 12px 28px rgba(0, 0, 0, 0.1);
+
+  /* Controls */
+  --control-height: 52px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000;
+    --surface: #1f1f1f;
+    --surface-raised: #262626;
+    --border: #3a3a3a;
+    --text: #f2f2f2;
+    --text-muted: #a8a8a8;
+    --text-subtle: #757575;
+    --accent: #ff385c;
+    --accent-pressed: #ff7088;
+    --accent-foreground: #ffffff;
+    --accent-tint: #3a1620;
+    --success: #3fc463;
+    --success-tint: #123420;
+    --warning: #e2954b;
+    --warning-tint: #3a2a15;
+    --danger: #e2604a;
+    --danger-tint: #3a1c14;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3), 0 12px 28px rgba(0, 0, 0, 0.4);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --surface: #1f1f1f;
+  --surface-raised: #262626;
+  --border: #3a3a3a;
+  --text: #f2f2f2;
+  --text-muted: #a8a8a8;
+  --text-subtle: #757575;
+  --accent: #ff385c;
+  --accent-pressed: #ff7088;
+  --accent-foreground: #ffffff;
+  --accent-tint: #3a1620;
+  --success: #3fc463;
+  --success-tint: #123420;
+  --warning: #e2954b;
+  --warning-tint: #3a2a15;
+  --danger: #e2604a;
+  --danger-tint: #3a1c14;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3), 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   Reset / base
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    "Airbnb Cereal VF",
+    Circular,
+    -apple-system,
+    "system-ui",
+    Roboto,
+    "Helvetica Neue",
+    sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Airbnb's signature focus treatment: a plain dark ring, never the accent
+ * color — pink stays reserved for actions/emphasis, not system chrome. */
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+#root {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+.text-display {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.text-page-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Airbnb favors bold, sentence-case section headings over small-caps
+ * micro-labels — this reads as a subheading, not a muted label. */
+.text-section {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.text-body {
+  font-size: 15px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.text-small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.text-subtle {
+  color: var(--text-subtle);
+}
+
+.text-warning {
+  color: var(--warning);
+}
+
+/* ==========================================================================
+   Money
+   ========================================================================== */
+
+.money-hero,
+.money-md,
+.money-sm {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  white-space: nowrap;
+}
+
+.money-hero {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.money-md {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.money-sm {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.money-signed {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.money-glyph {
+  font-size: 0.55em;
+  line-height: 1;
+}
+
+.money-positive {
+  color: var(--success);
+}
+
+.money-negative {
+  color: var(--danger);
+}
+
+/* ==========================================================================
+   Layout shell
+   ========================================================================== */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.screen-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  padding-top: calc(var(--space-4) + env(safe-area-inset-top));
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.screen-header .text-page-title {
+  flex: 1;
+  text-align: center;
+}
+
+.screen-header-home {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding-top: calc(var(--space-6) + env(safe-area-inset-top));
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.icon-btn {
+  width: var(--control-height);
+  height: var(--control-height);
+  min-width: var(--control-height);
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 20px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:active {
+  background: var(--border);
+}
+
+.icon-btn-spacer {
+  width: var(--control-height);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.screen-body {
+  flex: 1;
+  padding: var(--space-4);
+  padding-bottom: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.screen-footer {
+  position: sticky;
+  bottom: 0;
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+  background: var(--surface);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   Sections (Setup screen, generic grouping)
+   ========================================================================== */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* ==========================================================================
+   Surfaces
+   ========================================================================== */
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-action {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: var(--space-1);
+}
+
+/* The one hero surface per screen — the answer, not supporting detail. */
+.hero-block {
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: var(--space-5) var(--space-4);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+  min-height: var(--control-height);
+  border-radius: var(--radius-full);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.btn:active {
+  opacity: 0.7;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #e61e4d, #e31c5f, #d70466);
+  color: var(--accent-foreground);
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--text);
+}
+
+.btn-large {
+  width: 100%;
+  min-height: 52px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn-rebuy {
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border-color: transparent;
+  min-height: var(--control-height);
+  padding: 0 var(--space-4);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Text-only action — no fill, no border. */
+.btn-text {
+  min-height: auto;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  justify-content: flex-start;
+}
+
+.btn-text:active {
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   Inputs
+   ========================================================================== */
+
+.row-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.text-input {
+  flex: 1;
+  min-height: var(--control-height);
+  border-radius: var(--radius-sm);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0 var(--space-3);
+  font-size: 16px;
+}
+
+.text-input:focus-visible {
+  border-color: var(--text);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--text);
+}
+
+.money-input {
+  display: flex;
+  align-items: center;
+  min-height: var(--control-height);
+  border-radius: var(--radius-sm);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  padding: 0 var(--space-3);
+  gap: var(--space-1);
+}
+
+.money-input:focus-within {
+  border-color: var(--text);
+  box-shadow: 0 0 0 1px var(--text);
+}
+
+.money-input-prefix {
+  color: var(--text-muted);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.money-input input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 600;
+  min-width: 0;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.money-input input:focus {
+  outline: none;
+}
+
+.money-input-hero {
+  min-height: 64px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius);
+}
+
+.money-input-hero input {
+  font-size: 30px;
+}
+
+.money-input-hero .money-input-prefix {
+  font-size: 26px;
+}
+
+/* Stepper */
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.stepper-btn {
+  width: var(--control-height);
+  height: var(--control-height);
+  border-radius: var(--radius-full);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.stepper-btn:active {
+  background: var(--border);
+}
+
+.stepper-input {
+  width: 48px;
+  text-align: center;
+  min-height: var(--control-height);
+  border-radius: var(--radius-sm);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper-with-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Chip pill
+   ========================================================================== */
+
+.chip-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.chip-pill-md {
+  min-width: var(--control-height);
+  height: var(--control-height);
+  padding: 0 var(--space-2);
+  font-size: 15px;
+}
+
+.chip-pill-sm {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 var(--space-1);
+  font-size: 13px;
+}
+
+.chip-row {
+  gap: var(--space-3);
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   Status banner — soft tinted surface, no colored border (Airbnb reserves
+   outlines for focus; tone comes from a tinted background + icon color).
+   ========================================================================== */
+
+.status-banner {
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.status-banner-neutral {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.status-banner-good {
+  background: var(--success-tint);
+  color: var(--success);
+}
+
+.status-banner-warning {
+  background: var(--warning-tint);
+  color: var(--warning);
+}
+
+.status-banner-message {
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.status-banner-warning .status-banner-message,
+.status-banner-good .status-banner-message {
+  color: inherit;
+}
+
+.status-banner p {
+  margin: 0;
+  color: var(--text);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.status-banner-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.suggestion-list {
+  padding-left: 20px;
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* ==========================================================================
+   Player row (Live Game + Cash Out)
+   ========================================================================== */
+
+.player-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.player-row {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+
+.player-row-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.player-row-identity {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.player-name {
+  font-weight: 600;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-meta {
+  color: var(--text-muted);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.player-row-amount {
+  flex-shrink: 0;
+}
+
+.player-row-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.player-row-body {
+  border-top: var(--border-width) solid var(--border);
+  padding-top: var(--space-3);
+}
+
+/* ==========================================================================
+   Home
+   ========================================================================== */
+
+.active-game-block {
+  background: var(--surface-raised);
+  border-radius: var(--radius);
+  padding: var(--space-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  border: none;
+  box-shadow: var(--shadow-md);
+}
+
+.active-game-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.active-game-meta {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ==========================================================================
+   Chip Plan
+   ========================================================================== */
+
+.stack-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
+}
+
+.stack-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 15px;
+}
+
+.stack-qty {
+  font-weight: 600;
+  min-width: 28px;
+}
+
+.stack-name {
+  flex: 1;
+  color: var(--text-muted);
+}
+
+.stack-remaining {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.stack-subtotal {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stack-total {
+  font-weight: 600;
+  font-size: 15px;
+  border-top: var(--border-width) solid var(--border);
+  padding-top: var(--space-3);
+  margin-top: var(--space-1);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.stack-total .money-hero {
+  margin-left: auto;
+}
+
+.rate-line {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.rate-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+}
+
+.alt-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--bg);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.alt-option-active {
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.detail-block {
+  padding: 0 var(--space-1);
+}
+
+.detail-block + .detail-block {
+  border-top: var(--border-width) solid var(--border);
+  padding-top: var(--space-4);
+  margin-top: var(--space-1);
+}
+
+/* ==========================================================================
+   Live Game
+   ========================================================================== */
+
+.pot-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+}
+
+/* ==========================================================================
+   Cash Out
+   ========================================================================== */
+
+.cashout-row-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.chip-count-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.chip-count-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.chip-count-input {
+  width: var(--control-height);
+  min-height: var(--control-height);
+  border-radius: var(--radius-sm);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.chip-count-input:focus-visible {
+  border-color: var(--text);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--text);
+}
+
+.chip-count-total {
+  margin-left: auto;
+}
+
+.chip-count-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-1);
+}
+
+/* ==========================================================================
+   Settle Up / History — net + payment rows
+   ========================================================================== */
+
+.net-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-2) 0;
+  font-size: 15px;
+  border-bottom: var(--border-width) solid var(--border);
+}
+
+.net-row:last-child {
+  border-bottom: none;
+}
+
+.payment-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.payment-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.payment-row-paid {
+  background: var(--success-tint);
+  box-shadow: none;
+}
+
+.payment-checkbox {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  accent-color: var(--success);
+}
+
+.payment-parties {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.payment-parties .arrow {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.payment-row-paid .payment-parties {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.share-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.share-actions .btn {
+  flex: 1;
+}
+
+/* ==========================================================================
+   History
+   ========================================================================== */
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.history-meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: var(--space-2);
+}
