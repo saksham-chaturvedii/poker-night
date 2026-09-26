@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Screen } from "../components/Screen";
-import { NumberWheel } from "../components/NumberWheel";
+import { NumberField } from "../components/NumberField";
 import { MoneyInput } from "../components/MoneyInput";
 
 type BuyInProps = {
@@ -25,6 +25,7 @@ export function BuyIn({
   onNext,
 }: BuyInProps) {
   const filledCount = playerNames.map((n) => n.trim()).filter(Boolean).length;
+  const minStock = filledCount || 1;
 
   // Auto-track "stock chips for" to players + 2 until the host manually
   // adjusts it — same behaviour as before, just living on its own screen now.
@@ -34,6 +35,20 @@ export function BuyIn({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filledCount, plannedCustomized]);
+
+  // A local draft, decoupled from the committed value, so clearing the
+  // field to type a fresh number doesn't get immediately clamped back to
+  // the minimum mid-keystroke — the clamp only applies once, on blur.
+  const [stockDraft, setStockDraft] = useState<number | undefined>(plannedBuyIns);
+  useEffect(() => {
+    setStockDraft(plannedBuyIns);
+  }, [plannedBuyIns]);
+
+  const commitStock = () => {
+    const clamped = Math.min(30, Math.max(minStock, stockDraft ?? plannedBuyIns));
+    setStockDraft(clamped);
+    onPlannedChange(clamped, true);
+  };
 
   const canProceed = (buyIn ?? 0) > 0;
 
@@ -54,16 +69,13 @@ export function BuyIn({
 
       <section className="section">
         <h2 className="text-section">Stock chips for</h2>
-        <div className="control-with-label">
-          <NumberWheel
-            value={plannedBuyIns}
-            min={filledCount || 1}
-            max={30}
-            label="buy-ins to stock chips for"
-            onChange={(v) => onPlannedChange(v, true)}
-          />
-          <span className="text-body">buy-ins</span>
-        </div>
+        <NumberField
+          value={stockDraft}
+          onChange={setStockDraft}
+          onBlur={commitStock}
+          suffix="buy-ins"
+          label="buy-ins to stock chips for"
+        />
       </section>
     </Screen>
   );

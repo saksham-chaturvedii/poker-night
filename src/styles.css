@@ -405,6 +405,16 @@ input {
   box-shadow: var(--shadow-sm);
 }
 
+/* A disabled primary action should look like "not yet" — a flat, quiet
+ * pill — never a dimmed version of the same vivid gradient block, which
+ * reads as broken/loading rather than intentionally inactive. */
+.btn-primary:disabled {
+  background: var(--border);
+  color: var(--text-subtle);
+  box-shadow: none;
+  opacity: 1;
+}
+
 .btn-secondary {
   background: var(--surface);
   border-color: var(--text);
@@ -466,7 +476,7 @@ input {
 .text-input:focus-visible {
   border-color: var(--text);
   outline: none;
-  box-shadow: 0 0 0 1px var(--text);
+  box-shadow: 0 0 0 2px var(--text);
 }
 
 .money-input {
@@ -482,7 +492,7 @@ input {
 
 .money-input:focus-within {
   border-color: var(--text);
-  box-shadow: 0 0 0 1px var(--text);
+  box-shadow: 0 0 0 2px var(--text);
 }
 
 .money-input-prefix {
@@ -521,112 +531,67 @@ input {
   font-size: 26px;
 }
 
-/* A control paired with a short trailing label (e.g. the "stock chips for"
- * wheel + "buy-ins"). */
-.control-with-label {
+/* The generic counterpart to .money-input — same box, same big
+ * tabular-nums number, no ₹ prefix, an optional trailing unit instead.
+ * See components/NumberField.tsx. */
+.number-input {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-}
-
-/* ==========================================================================
-   Number wheel — the touch-native picker for small bounded integers
-   (chip counts, buy-ins to stock for). See components/NumberWheel.tsx.
-   ========================================================================== */
-
-.wheel-wrap {
-  display: inline-flex;
-  align-items: center;
+  min-height: var(--control-height);
+  border-radius: var(--radius-sm);
+  border: var(--border-width) solid var(--border);
+  background: var(--surface);
+  padding: 0 var(--space-3);
   gap: var(--space-2);
 }
 
-.wheel {
-  position: relative;
-  width: 76px;
+.number-input:focus-within {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px var(--text);
 }
 
-.wheel-track {
-  height: 100%;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%);
-}
-
-.wheel-track::-webkit-scrollbar {
-  display: none;
-}
-
-.wheel-item {
-  scroll-snap-align: center;
-  text-align: center;
+.number-input input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--text);
   font-size: 20px;
   font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  color: var(--text);
-  cursor: pointer;
-}
-
-/* Decorative — frames the centred, selected row. Doesn't intercept touch,
- * so it never fights the scroll gesture underneath it. */
-.wheel-selection-frame {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  border-top: var(--border-width) solid var(--border);
-  border-bottom: var(--border-width) solid var(--border);
-  pointer-events: none;
-}
-
-/* The always-available "type it instead" fallback — a wheel is never the
- * only way to set a value. */
-.wheel-edit-toggle {
-  position: relative;
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  border-radius: var(--radius-full);
-  border: var(--border-width) solid var(--border);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0;
+  font-variant-numeric: tabular-nums;
 }
 
-.wheel-edit-toggle::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
+.number-input input:focus {
+  outline: none;
 }
 
-.wheel-edit-toggle:active {
-  background: var(--border);
-}
-
-.wheel-editing {
+.number-input-suffix {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+  padding-left: var(--space-3);
+  border-left: var(--border-width) solid var(--border);
+  align-self: stretch;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
 }
 
-.wheel-editing .text-input {
-  width: 72px;
-  text-align: center;
-  flex: none;
+.number-input-hero {
+  min-height: 64px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius);
 }
 
-/* ==========================================================================
-   Chip pill
-   ========================================================================== */
+.number-input-hero input {
+  font-size: 30px;
+}
+
+.number-input-hero .number-input-suffix {
+  font-size: 16px;
+}
 
 .chip-pill {
   display: inline-flex;
@@ -657,6 +622,7 @@ input {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  flex-shrink: 0;
 }
 
 .status-banner-neutral {
@@ -979,55 +945,114 @@ input {
 }
 
 /* ==========================================================================
-   Cash Out
+   Chip inventory rows — Setup's per-denomination chip counts, each a
+   NumberField beside its ChipPill.
    ========================================================================== */
 
-/* Each denomination is a full tappable row (opens the NumberPickerSheet)
- * rather than a tiny inline field — the row itself is the ≥44px touch
- * target, not just the number inside it. */
-.chip-count-list {
+.denom-inventory-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
-.chip-count-row {
+.denom-inventory-row {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  width: 100%;
-  min-height: 48px;
-  padding: var(--space-2) var(--space-3);
-  border: none;
-  border-radius: var(--radius-sm);
-  background: var(--bg);
-  color: var(--text);
-  font: inherit;
-  text-align: left;
 }
 
-.chip-count-row:active {
-  background: var(--border);
-}
-
-.chip-count-row-count {
+.denom-inventory-row .number-input {
   flex: 1;
-  font-size: 17px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
 }
 
-.chip-count-row-chevron {
-  color: var(--text-subtle);
-  font-size: 18px;
-}
+/* ==========================================================================
+   Cash Out — a compact, left-aligned ledger: one row per player (name,
+   buy-in, chip-count field, ₹ value, "No chips left"), divided by
+   hairlines. No cards, no centering — flex-wrap lets a row fall onto two
+   left-aligned lines on narrow screens instead of squeezing everything
+   onto one. See screens/CashOut.tsx.
+   ========================================================================== */
 
-.chip-count-footer {
+.cashout-status {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding-top: var(--space-1);
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 var(--space-1);
+  flex-shrink: 0;
+}
+
+.cashout-status-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cashout-status-good .cashout-status-text {
+  color: var(--success);
+}
+
+.cashout-status-warning .cashout-status-text {
+  color: var(--warning);
+}
+
+.cashout-status-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.cashout-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* A left-aligned, top-to-bottom stack — name, then the buy-in note below
+ * it, then a full-width chip-count field, then its ₹ value — rather than
+ * cramming everything onto one wrapping line. Naturally left-aligned at
+ * any width, no wrap logic needed. */
+.cashout-row {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4) 0;
+}
+
+.cashout-row-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cashout-row-count {
+  width: 100%;
+}
+
+.cashout-row-count .number-input {
+  width: 100%;
+}
+
+.cashout-row-value {
+  line-height: 1;
+}
+
+/* Before a player has typed anything — quiet, not broken. */
+.cashout-row-value-quiet {
+  color: var(--text-subtle);
+}
+
+.cashout-row-value-quiet .money-md {
+  color: var(--text-subtle);
+  font-weight: 500;
+}
+
+.cashout-divider {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--border-width);
+  background: var(--border);
 }
 
 /* ==========================================================================
@@ -1141,71 +1166,3 @@ input {
   flex-shrink: 0;
 }
 
-/* ==========================================================================
-   Bottom sheet — see components/NumberPickerSheet.tsx. Used wherever a
-   screen has too many chip-count wheels to show inline at once.
-   ========================================================================== */
-
-.sheet-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: flex-end;
-  z-index: 20;
-  animation: sheet-backdrop-in 0.15s ease-out;
-}
-
-.sheet {
-  width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-  background: var(--surface);
-  border-radius: var(--radius) var(--radius) 0 0;
-  padding: var(--space-3) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
-  box-shadow: var(--shadow-md);
-  animation: sheet-slide-up 0.2s ease-out;
-}
-
-@keyframes sheet-backdrop-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes sheet-slide-up {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.sheet-handle {
-  width: 36px;
-  height: 4px;
-  border-radius: var(--radius-full);
-  background: var(--border);
-}
-
-.sheet-title {
-  align-self: flex-start;
-}
-
-.sheet-body {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-.sheet .btn-large {
-  max-width: 320px;
-}
