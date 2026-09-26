@@ -13,13 +13,20 @@ export function MoneyInput({ value, onChange, placeholder, autoFocus, size = "de
     <div className={size === "hero" ? "money-input money-input-hero" : "money-input"}>
       <span className="money-input-prefix">₹</span>
       <input
-        type="number"
-        inputMode="decimal"
+        // A plain text field with inputMode+pattern, not type="number" —
+        // buy-ins are always whole rupees, and this combination is the
+        // reliable cross-platform way to get a bare numeric keypad (no
+        // decimal/e/+/- keys, no browser spinner UI, which type="number"
+        // doesn't consistently avoid).
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        autoComplete="off"
         placeholder={placeholder}
         autoFocus={autoFocus}
         value={value ?? ""}
         onChange={(e) => {
-          const raw = e.target.value;
+          const raw = e.target.value.replace(/[^0-9]/g, "");
           onChange(raw === "" ? undefined : Number(raw));
         }}
       />

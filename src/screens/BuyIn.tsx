@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Screen } from "../components/Screen";
-import { NumberStepper } from "../components/NumberStepper";
+import { NumberWheel } from "../components/NumberWheel";
 import { MoneyInput } from "../components/MoneyInput";
 
 type BuyInProps = {
@@ -54,14 +54,15 @@ export function BuyIn({
 
       <section className="section">
         <h2 className="text-section">Stock chips for</h2>
-        <div className="stepper-with-label">
-          <NumberStepper
+        <div className="control-with-label">
+          <NumberWheel
             value={plannedBuyIns}
             min={filledCount || 1}
-            max={99}
+            max={30}
+            label="buy-ins to stock chips for"
             onChange={(v) => onPlannedChange(v, true)}
           />
-          <span>buy-ins</span>
+          <span className="text-body">buy-ins</span>
         </div>
       </section>
     </Screen>

@@ -4,7 +4,9 @@ import { ChipPill } from "../components/ChipPill";
 import { PlayerRow } from "../components/PlayerRow";
 import { MoneyAmount } from "../components/MoneyAmount";
 import { StatusBanner } from "../components/StatusBanner";
-import { formatMoney } from "../lib/format";
+import { NumberWheel } from "../components/NumberWheel";
+import { NumberPickerSheet } from "../components/NumberPickerSheet";
+import { formatMoney, playerName } from "../lib/format";
 import type { Game } from "../types";
 
 type CashOutProps = {
@@ -14,9 +16,12 @@ type CashOutProps = {
   onSettle: () => void;
 };
 
+type OpenPicker = { playerId: string; denomValue: number };
+
 export function CashOut({ game, onBack, onSetCashOut, onSettle }: CashOutProps) {
   // chip counts entered per player per denomination
   const [chipCounts, setChipCounts] = useState<Record<string, Record<number, number>>>({});
+  const [openPicker, setOpenPicker] = useState<OpenPicker | null>(null);
 
   const rungs = game.chipPlan?.ok ? game.chipPlan.rungs : [];
   const chipsPerRupee = game.chipPlan?.ok ? game.chipPlan.chipsPerRupee : 1;
@@ -46,6 +51,10 @@ export function CashOut({ game, onBack, onSetCashOut, onSettle }: CashOutProps) 
 
   const chipTotalFor = (playerId: string): number =>
     rungs.reduce((sum, rung) => sum + (chipCounts[playerId]?.[rung.value] ?? 0) * rung.value, 0);
+
+  // How many of a denomination could physically exist — bounds the wheel
+  // sensibly instead of an arbitrary large number.
+  const maxForDenom = (value: number): number => game.setup.inventory.find((d) => d.value === value)?.count ?? 200;
 
   const banner = useMemo(() => {
     if (anyMissing)
@@ -77,19 +86,20 @@ export function CashOut({ game, onBack, onSetCashOut, onSettle }: CashOutProps) 
             name={player.name}
             meta={`bought in ${formatMoney(player.totalIn)}`}
           >
-            <div className="chip-count-grid">
+            <div className="chip-count-list">
               {rungs.map((rung) => (
-                <div className="chip-count-cell" key={rung.value}>
-                  <ChipPill value={rung.value} />
-                  <input
-                    className="chip-count-input"
-                    type="number"
-                    inputMode="numeric"
-                    min={0}
-                    value={chipCounts[player.id]?.[rung.value] ?? ""}
-                    onChange={(e) => setChipCount(player.id, rung.value, Number(e.target.value) || 0)}
-                  />
-                </div>
+                <button
+                  type="button"
+                  className="chip-count-row"
+                  key={rung.value}
+                  onClick={() => setOpenPicker({ playerId: player.id, denomValue: rung.value })}
+                >
+                  <ChipPill value={rung.value} size="sm" />
+                  <span className="chip-count-row-count">{chipCounts[player.id]?.[rung.value] ?? 0}</span>
+                  <span className="chip-count-row-chevron" aria-hidden="true">
+                    ›
+                  </span>
+                </button>
               ))}
             </div>
             <div className="chip-count-footer">
@@ -104,6 +114,23 @@ export function CashOut({ game, onBack, onSetCashOut, onSettle }: CashOutProps) 
           </PlayerRow>
         ))}
       </div>
+
+      {openPicker && (
+        <NumberPickerSheet
+          title={`${openPicker.denomValue} chip — ${playerName(game.players, openPicker.playerId)}`}
+          onClose={() => setOpenPicker(null)}
+        >
+          <NumberWheel
+            value={chipCounts[openPicker.playerId]?.[openPicker.denomValue] ?? 0}
+            min={0}
+            max={maxForDenom(openPicker.denomValue)}
+            step={1}
+            itemHeight={52}
+            label={`${openPicker.denomValue} chip count for ${playerName(game.players, openPicker.playerId)}`}
+            onChange={(v) => setChipCount(openPicker.playerId, openPicker.denomValue, v)}
+          />
+        </NumberPickerSheet>
+      )}
     </Screen>
   );
 }

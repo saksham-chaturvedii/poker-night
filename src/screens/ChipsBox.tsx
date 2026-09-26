@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Screen } from "../components/Screen";
-import { NumberStepper } from "../components/NumberStepper";
 import { ChipPill } from "../components/ChipPill";
+import { NumberWheel } from "../components/NumberWheel";
+import { NumberPickerSheet } from "../components/NumberPickerSheet";
 import type { ChipDenom } from "../types";
 
 type ChipsBoxProps = {
@@ -11,11 +13,14 @@ type ChipsBoxProps = {
 };
 
 export function ChipsBox({ inventory, onChange, onBack, onSubmit }: ChipsBoxProps) {
+  const [openDenom, setOpenDenom] = useState<number | null>(null);
   const canSubmit = inventory.some((d) => d.count > 0);
 
   const updateCount = (value: number, count: number) => {
     onChange(inventory.map((d) => (d.value === value ? { ...d, count } : d)));
   };
+
+  const openDenomEntry = inventory.find((d) => d.value === openDenom);
 
   return (
     <Screen
@@ -31,17 +36,34 @@ export function ChipsBox({ inventory, onChange, onBack, onSubmit }: ChipsBoxProp
         <h2 className="text-section">Chips in the box</h2>
         <p className="text-small">Set 0 for any denomination your set doesn't include.</p>
         {inventory.map((denom) => (
-          <div className="row-input chip-row" key={denom.value}>
+          <button
+            type="button"
+            className="chip-count-row"
+            key={denom.value}
+            onClick={() => setOpenDenom(denom.value)}
+          >
             <ChipPill value={denom.value} />
-            <NumberStepper
-              value={denom.count}
-              min={0}
-              max={999}
-              onChange={(v) => updateCount(denom.value, v)}
-            />
-          </div>
+            <span className="chip-count-row-count">{denom.count}</span>
+            <span className="chip-count-row-chevron" aria-hidden="true">
+              ›
+            </span>
+          </button>
         ))}
       </section>
+
+      {openDenomEntry && (
+        <NumberPickerSheet title={`${openDenomEntry.value} chip — how many in the box`} onClose={() => setOpenDenom(null)}>
+          <NumberWheel
+            value={openDenomEntry.count}
+            min={0}
+            max={200}
+            step={1}
+            itemHeight={52}
+            label={`${openDenomEntry.value} chip count in the box`}
+            onChange={(v) => updateCount(openDenomEntry.value, v)}
+          />
+        </NumberPickerSheet>
+      )}
     </Screen>
   );
 }

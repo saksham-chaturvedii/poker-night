@@ -19,7 +19,7 @@ export function Home({ activeGame, history, onNewGame, onResume, onOpenHistory, 
     <div className="screen">
       <header className="screen-header screen-header-home">
         <h1 className="text-display">🃏 Poker Night</h1>
-        <p className="subtitle">Chips, buy-ins, and settle-up — sorted.</p>
+        <p className="subtitle">Set up chips, track buy-ins, and settle the table easily.</p>
       </header>
       <div className="screen-body">
         {activeGame &&
