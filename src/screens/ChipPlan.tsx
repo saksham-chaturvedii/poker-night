@@ -75,7 +75,7 @@ export function ChipPlanScreen({ setup, chipPlan, onBack, onApply }: ChipPlanPro
           {plan.rungs.map((rung) => (
             <div className="stack-line" key={rung.value}>
               <ChipPill value={rung.value} />
-              <span className="stack-qty">{rung.qtyPerPlayer}×</span>
+              <span className="stack-qty">×{rung.qtyPerPlayer}</span>
               <span className="stack-subtotal">{rung.qtyPerPlayer * rung.value}</span>
             </div>
           ))}
@@ -91,7 +91,7 @@ export function ChipPlanScreen({ setup, chipPlan, onBack, onApply }: ChipPlanPro
       <div className="card">
         <div className="detail-block">
           {plan.chipsPerRupee !== 1 && <p className="rate-line">Playing at {formatRate(plan.chipsPerRupee)}</p>}
-          <button className="btn-text" onClick={() => setShowRatePicker((s) => !s)}>
+          <button className="btn btn-secondary btn-large" onClick={() => setShowRatePicker((s) => !s)}>
             {showRatePicker ? "Cancel" : "Change rate"}
           </button>
           {showRatePicker && (
@@ -109,7 +109,7 @@ export function ChipPlanScreen({ setup, chipPlan, onBack, onApply }: ChipPlanPro
           )}
           {rateError && <p className="text-small text-warning">{rateError}</p>}
           {override && (
-            <button className="btn-text" onClick={() => setOverride(null)}>
+            <button className="btn btn-secondary btn-large" onClick={() => setOverride(null)}>
               Reset to best plan
             </button>
           )}

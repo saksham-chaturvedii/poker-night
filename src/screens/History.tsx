@@ -27,11 +27,11 @@ export function History({ history, onBack, onDeleteGame }: HistoryProps) {
                 </p>
                 {confirmingId === game.id ? (
                   <div className="confirm-delete-inline">
-                    <button className="btn-text" onClick={() => setConfirmingId(null)}>
+                    <button className="btn btn-secondary btn-compact" onClick={() => setConfirmingId(null)}>
                       Cancel
                     </button>
                     <button
-                      className="btn-text text-danger"
+                      className="btn btn-danger btn-compact"
                       onClick={() => {
                         onDeleteGame(game.id);
                         setConfirmingId(null);

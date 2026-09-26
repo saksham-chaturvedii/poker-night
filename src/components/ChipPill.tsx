@@ -14,6 +14,12 @@ const CHIP_COLORS: Record<number, { base: string; accent: string }> = {
 };
 const FALLBACK_COLORS = { base: "#5b5b5b", accent: "#f3ead9" };
 
+/** What's actually printed on the chip — a real 200-pc set prints "1" on
+ * the chip that plays as 100, same as a "5" reads as its face value. */
+const CHIP_LABELS: Record<number, string> = {
+  100: "1",
+};
+
 const EDGE_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
 const SUIT_ANGLES = [45, 135, 225, 315];
 const SUITS = ["♠", "♥", "♦", "♣"];
@@ -28,7 +34,8 @@ function polar(radius: number, angleDeg: number): [number, number] {
  * centre, matching the look of a real clay-composite chip. */
 export function ChipPill({ value, size = "md" }: ChipPillProps) {
   const { base, accent } = CHIP_COLORS[value] ?? FALLBACK_COLORS;
-  const fontSize = value >= 100 ? 26 : 30;
+  const label = CHIP_LABELS[value] ?? String(value);
+  const fontSize = label.length >= 3 ? 26 : 30;
 
   return (
     <span className={`chip-pill chip-pill-${size}`}>
@@ -73,7 +80,7 @@ export function ChipPill({ value, size = "md" }: ChipPillProps) {
           textAnchor="middle"
           dominantBaseline="central"
         >
-          {value}
+          {label}
         </text>
       </svg>
     </span>

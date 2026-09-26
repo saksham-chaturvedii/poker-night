@@ -25,7 +25,6 @@ export function BuyIn({
   onNext,
 }: BuyInProps) {
   const filledCount = playerNames.map((n) => n.trim()).filter(Boolean).length;
-  const rebuyCount = Math.max(plannedBuyIns - filledCount, 0);
 
   // Auto-track "stock chips for" to players + 2 until the host manually
   // adjusts it — same behaviour as before, just living on its own screen now.
@@ -64,14 +63,6 @@ export function BuyIn({
           />
           <span>buy-ins</span>
         </div>
-        <p className="text-small">
-          Everyone starts with one stack. If someone loses it all and buys in again, that stack comes out
-          of the box too.
-        </p>
-        <p className="text-small text-subtle">
-          = {filledCount || 0} starting stack{filledCount === 1 ? "" : "s"} + {rebuyCount} rebuy
-          {rebuyCount === 1 ? "" : "s"}
-        </p>
       </section>
     </Screen>
   );

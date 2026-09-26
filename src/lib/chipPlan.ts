@@ -17,6 +17,13 @@ export const NICE_RATES = [1, 2, 0.5, 5, 0.2, 10, 0.1, 4, 0.25, 2.5];
 
 const IDEAL_SHAPE_FULL = [0.35, 0.3, 0.2, 0.1, 0.05];
 
+/** Penalty per denomination the box actually has (cap > 0) but a candidate
+ * stack skips entirely. A real set is meant to use every chip you own — the
+ * small ones for blinds, progressively fewer of the bigger ones — so a
+ * "complete" stack should always outrank one that quietly drops a
+ * denomination, even at a slightly less clean rate. */
+const UNUSED_DENOM_PENALTY = 12;
+
 /** Max feasible stacks to gather per rate before giving up — keeps the
  * search bounded even for generous inventories/buy-ins. */
 const SOLUTIONS_PER_RATE = 500;
@@ -84,7 +91,11 @@ export function planForRate(
 
   const rateIndex = NICE_RATES.indexOf(rate);
   const best = solutions
-    .map((qty) => ({ rate, qty, score: scoreCandidate(values, qty, rate, rateIndex < 0 ? NICE_RATES.length : rateIndex) }))
+    .map((qty) => ({
+      rate,
+      qty,
+      score: scoreCandidate(values, qty, caps, rate, rateIndex < 0 ? NICE_RATES.length : rateIndex),
+    }))
     .sort((a, b) => a.score - b.score)[0];
 
   return toCore(best, inventory, plannedBuyIns);
@@ -111,7 +122,7 @@ function findCandidates(
 
     const solutions = solveStack(values, caps, target, SOLUTIONS_PER_RATE);
     for (const qty of solutions) {
-      const score = scoreCandidate(values, qty, rate, rateIndex);
+      const score = scoreCandidate(values, qty, caps, rate, rateIndex);
       found.push({ rate, qty, score });
       if (stopAfter && found.length >= stopAfter) return;
     }
@@ -169,7 +180,13 @@ function idealShape(len: number): number[] {
   return base.map((v) => v / sum);
 }
 
-function scoreCandidate(values: number[], qty: number[], rate: number, rateIndex: number): number {
+function scoreCandidate(
+  values: number[],
+  qty: number[],
+  caps: number[],
+  rate: number,
+  rateIndex: number,
+): number {
   const totalChips = qty.reduce((a, b) => a + b, 0);
   const usedIndices = qty.map((q, i) => (q > 0 ? i : -1)).filter((i) => i >= 0);
   const smallBlind = Math.min(...usedIndices.map((i) => values[i]));
@@ -198,7 +215,19 @@ function scoreCandidate(values: number[], qty: number[], rate: number, rateIndex
   const distFromHalfRupee = Math.abs(doubled - Math.round(doubled));
   const cleanlinessPenalty = distFromHalfRupee;
 
-  return rateIndex * 5 + blindPenalty * 2 + shapePenalty * 10 + sizePenalty * 1 + cleanlinessPenalty * 4;
+  let unusedPenalty = 0;
+  for (let i = 0; i < qty.length; i++) {
+    if (caps[i] > 0 && qty[i] === 0) unusedPenalty += UNUSED_DENOM_PENALTY;
+  }
+
+  return (
+    rateIndex * 5 +
+    blindPenalty * 2 +
+    shapePenalty * 10 +
+    sizePenalty * 1 +
+    cleanlinessPenalty * 4 +
+    unusedPenalty
+  );
 }
 
 function toCore(candidate: Candidate, inventory: ChipDenom[], plannedBuyIns: number): ChipPlanCore {

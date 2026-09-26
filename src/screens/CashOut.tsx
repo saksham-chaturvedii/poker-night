@@ -48,7 +48,8 @@ export function CashOut({ game, onBack, onSetCashOut, onSettle }: CashOutProps) 
     rungs.reduce((sum, rung) => sum + (chipCounts[playerId]?.[rung.value] ?? 0) * rung.value, 0);
 
   const banner = useMemo(() => {
-    if (anyMissing) return { tone: "neutral" as const, text: "Enter every player's cash-out to continue." };
+    if (anyMissing)
+      return { tone: "neutral" as const, text: "Enter every player's remaining chips balance to continue." };
     if (isBalanced) return { tone: "good" as const, text: `All ${formatMoney(totalPot)} accounted for. ✓` };
     if (diff > 0)
       return { tone: "warning" as const, text: `${formatMoney(diff)} unaccounted for — recount the chips.` };
@@ -92,7 +93,7 @@ export function CashOut({ game, onBack, onSetCashOut, onSettle }: CashOutProps) 
               ))}
             </div>
             <div className="chip-count-footer">
-              <button className="btn-text" onClick={() => setNoneLeft(player.id)}>
+              <button className="btn btn-secondary btn-compact" onClick={() => setNoneLeft(player.id)}>
                 No chips left
               </button>
               <span className="text-small">

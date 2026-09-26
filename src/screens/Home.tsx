@@ -66,7 +66,7 @@ export function Home({ activeGame, history, onNewGame, onResume, onOpenHistory, 
         </button>
 
         {history.length > 0 && (
-          <button className="btn-text" onClick={onOpenHistory}>
+          <button className="btn btn-secondary btn-large" onClick={onOpenHistory}>
             Past games ({history.length})
           </button>
         )}

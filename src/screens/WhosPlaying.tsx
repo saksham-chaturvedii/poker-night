@@ -47,7 +47,7 @@ export function WhosPlaying({ playerNames, onChange, onBack, onNext }: WhosPlayi
             )}
           </div>
         ))}
-        <button className="btn-text" onClick={addField}>
+        <button className="btn btn-secondary btn-large" onClick={addField}>
           + Add player
         </button>
       </section>
