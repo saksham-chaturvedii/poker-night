@@ -120,6 +120,10 @@ export function useGame() {
     setState((s) => ({ ...s, activeGame: null }));
   }, []);
 
+  const deleteHistoryGame = useCallback((gameId: string) => {
+    setState((s) => ({ ...s, history: s.history.filter((g) => g.id !== gameId) }));
+  }, []);
+
   return {
     activeGame: state.activeGame,
     history: state.history,
@@ -132,5 +136,6 @@ export function useGame() {
     setUpiId,
     finishGame,
     discardActiveGame,
+    deleteHistoryGame,
   };
 }

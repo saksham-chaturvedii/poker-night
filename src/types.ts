@@ -88,7 +88,9 @@ export type SettleResult =
 
 export type Screen =
   | "home"
-  | "setup"
+  | "whosPlaying"
+  | "buyIn"
+  | "chipsBox"
   | "chipPlan"
   | "liveGame"
   | "cashOut"

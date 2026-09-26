@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { MoneyAmount } from "../components/MoneyAmount";
 import type { Game } from "../types";
 
@@ -7,9 +8,11 @@ type HomeProps = {
   onNewGame: () => void;
   onResume: () => void;
   onOpenHistory: () => void;
+  onDeleteActive: () => void;
 };
 
-export function Home({ activeGame, history, onNewGame, onResume, onOpenHistory }: HomeProps) {
+export function Home({ activeGame, history, onNewGame, onResume, onOpenHistory, onDeleteActive }: HomeProps) {
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const totalPot = activeGame?.players.reduce((a, p) => a + p.totalIn, 0) ?? 0;
 
   return (
@@ -19,16 +22,44 @@ export function Home({ activeGame, history, onNewGame, onResume, onOpenHistory }
         <p className="subtitle">Chips, buy-ins, and settle-up — sorted.</p>
       </header>
       <div className="screen-body">
-        {activeGame && (
-          <button className="active-game-block" onClick={onResume}>
-            <div className="active-game-label">
-              <span className="text-section">Game in progress</span>
-              <span className="active-game-meta">{activeGame.players.length} players</span>
+        {activeGame &&
+          (confirmDelete ? (
+            <div className="active-game-block confirm-delete">
+              <p className="text-body">Delete this in-progress game? This can't be undone.</p>
+              <div className="confirm-delete-actions">
+                <button className="btn btn-secondary" onClick={() => setConfirmDelete(false)}>
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => {
+                    onDeleteActive();
+                    setConfirmDelete(false);
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-            <MoneyAmount value={totalPot} variant="hero" />
-            <span className="text-small">Tap to resume →</span>
-          </button>
-        )}
+          ) : (
+            <div className="active-game-block">
+              <button className="active-game-resume" onClick={onResume}>
+                <div className="active-game-label">
+                  <span className="text-section">Game in progress</span>
+                  <span className="active-game-meta">{activeGame.players.length} players</span>
+                </div>
+                <MoneyAmount value={totalPot} variant="hero" />
+                <span className="text-small">Tap to resume →</span>
+              </button>
+              <button
+                className="icon-btn active-game-delete"
+                aria-label="Delete this game"
+                onClick={() => setConfirmDelete(true)}
+              >
+                🗑
+              </button>
+            </div>
+          ))}
 
         <button className="btn btn-primary btn-large" onClick={onNewGame}>
           + New Game

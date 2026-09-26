@@ -26,7 +26,7 @@ export function ChipPlanScreen({ setup, chipPlan, onBack, onApply }: ChipPlanPro
           tone="warning"
           action={
             <button className="btn btn-secondary" onClick={onBack}>
-              Back to setup
+              Back to chip inventory
             </button>
           }
         >
@@ -76,7 +76,6 @@ export function ChipPlanScreen({ setup, chipPlan, onBack, onApply }: ChipPlanPro
             <div className="stack-line" key={rung.value}>
               <ChipPill value={rung.value} />
               <span className="stack-qty">{rung.qtyPerPlayer}×</span>
-              <span className="stack-name">{rung.value}</span>
               <span className="stack-subtotal">{rung.qtyPerPlayer * rung.value}</span>
             </div>
           ))}
