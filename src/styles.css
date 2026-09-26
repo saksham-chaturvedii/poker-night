@@ -1006,9 +1006,7 @@ input {
 }
 
 /* A left-aligned, top-to-bottom stack — name, then the buy-in note below
- * it, then a full-width chip-count field, then its ₹ value — rather than
- * cramming everything onto one wrapping line. Naturally left-aligned at
- * any width, no wrap logic needed. */
+ * it, then the chip-count field with its "= ₹value" on the same line. */
 .cashout-row {
   position: relative;
   display: flex;
@@ -1024,12 +1022,37 @@ input {
   gap: 2px;
 }
 
-.cashout-row-count {
+/* The chip-count field and its "= ₹value" sit on one line — the field
+ * shrinks first if space is tight, wrapping only if it can't get any
+ * narrower without the number itself getting cramped. */
+.cashout-row-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
   width: 100%;
+}
+
+.cashout-row-count {
+  flex: 1 1 180px;
+  min-width: 0;
 }
 
 .cashout-row-count .number-input {
   width: 100%;
+}
+
+.cashout-row-result {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.cashout-equals {
+  color: var(--text-subtle);
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .cashout-row-value {

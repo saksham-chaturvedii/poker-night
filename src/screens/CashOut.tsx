@@ -69,20 +69,27 @@ export function CashOut({ game, onBack, onSetCashOut, onSettle }: CashOutProps) 
                 <span className="player-meta">bought in {formatMoney(player.totalIn)}</span>
               </div>
 
-              <div className="cashout-row-count">
-                <NumberField
-                  value={entered ? Math.round((player.cashOut ?? 0) * chipsPerRupee) : undefined}
-                  onChange={(v) => setChips(player.id, v)}
-                  placeholder="0"
-                  size="hero"
-                  suffix="in chips"
-                  label={`${player.name}'s total chips`}
-                />
-              </div>
+              <div className="cashout-row-line">
+                <div className="cashout-row-count">
+                  <NumberField
+                    value={entered ? Math.round((player.cashOut ?? 0) * chipsPerRupee) : undefined}
+                    onChange={(v) => setChips(player.id, v)}
+                    placeholder="0"
+                    size="hero"
+                    suffix="in chips"
+                    label={`${player.name}'s total chips`}
+                  />
+                </div>
 
-              <span className={entered ? "cashout-row-value" : "cashout-row-value cashout-row-value-quiet"}>
-                <MoneyAmount value={player.cashOut ?? 0} variant="md" />
-              </span>
+                <div className="cashout-row-result">
+                  <span className="cashout-equals" aria-hidden="true">
+                    =
+                  </span>
+                  <span className={entered ? "cashout-row-value" : "cashout-row-value cashout-row-value-quiet"}>
+                    <MoneyAmount value={player.cashOut ?? 0} variant="md" />
+                  </span>
+                </div>
+              </div>
 
               {i < game.players.length - 1 && <div className="cashout-divider" aria-hidden="true" />}
             </div>
